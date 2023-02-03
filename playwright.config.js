@@ -13,11 +13,12 @@ const { devices } = require('@playwright/test');
  * @type {import('@playwright/test').PlaywrightTestConfig}
  */
 const config = {
-  testDir: './tests',
+  testDir: './tests/web',
   globalSetup: require.resolve('./global-setup'),
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
+    toHaveScreenshot: { maxDiffPixels: 100 },
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
@@ -45,6 +46,7 @@ const config = {
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    viewport: { width: 1280, height: 720 },
   },
 
   /* Configure projects for major browsers */
