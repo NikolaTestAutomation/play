@@ -1,29 +1,38 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
+const { parse } = require('csv-parse/sync');
+
+const records = parse(fs.readFileSync(path.resolve(__dirname, '../testData/inventoryProductData.csv')), {
+  columns: true,
+  skip_empty_lines: true
+});
+
 
 test.describe('@Smoke-suite > Inventory', () => {
   test.describe('Verify product data', () => {
-    test('for backpack', async ({ page, context }) => {
-      //await context.tracing.start({ screenshots: true, snapshots: true });
-      await page.goto('/inventory.html');
-      //wanted to grab entire investory tile and not be restricted by products order
-      const elementParent = page.locator(`${'#add-to-cart-sauce-labs-backpack'} >> xpath=..`)
-      const parent = elementParent.locator('xpath=..');
-      //now i can run validations by searching elements under defined parent
-      await expect.soft(parent.locator('.inventory_item_name'), 'Backback product title is not correct').toHaveText('Sauce Labs Backpack');
-      await expect.soft(parent.locator('.inventory_item_desc')).toHaveText('carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.');
-      await expect.soft(parent.locator('.inventory_item_price')).toHaveText('$29.99');
-      await expect.soft(parent.locator('.inventory_item_price')).not.toContainText("text");
-      await expect.soft(page.locator('[alt="Sauce Labs Backpack"]')).toHaveScreenshot('inventoryBackpack.png');
-      //await context.tracing.stop({ path: 'trace.zip' });
-    })
+    for (const record of records) {
+      test(`for ${String(record.id).replace("add-to-cart-", "")}`, async ({ page }) => {
+        await page.goto('/inventory.html');
+        //wanted to grab entire investory tile and not be restricted by products order
+        const elementParent = page.locator(`${'[id="' + record.id + '"]'} >> xpath=..`)
+        const parent = elementParent.locator('xpath=..');
+        //now i can run validations by searching elements under defined parent
+        await expect.soft(parent.locator('.inventory_item_name'), 'Product title is not correct').toHaveText(record.title);
+        await expect.soft(parent.locator('.inventory_item_desc'), 'Product description is not correct').toHaveText(record.description);
+        await expect.soft(parent.locator('.inventory_item_price'), 'Product price is not correct').toHaveText(record.price);
+      })
+    }
+  })
 
-    
-    test('for t-shirt', async ({ page, context }) => {
-      //await context.tracing.start({ screenshots: true, snapshots: true });
-      await page.goto('/inventory.html');
-      await page.click('#add-to-cart-sauce-labs-bolt-t-shirt')
-      //await context.tracing.stop({ path: 'trace.zip' });
-    })
+
+  test('Compare screenshot for entire page', async ({ page }) => {
+    //await context.tracing.start({ screenshots: true, snapshots: true });
+    await page.goto('/inventory.html');
+    //await expect(page.locator('[alt="Sauce Labs Backpack"]')).toHaveScreenshot('inventoryBackpack.png', {  });
+    await expect(page).toHaveScreenshot();
+    //await context.tracing.stop({ path: 'trace.zip' });
   })
 });
+
