@@ -15,8 +15,10 @@ require('dotenv').config();
 const config = {
   testDir: './tests/web',
   globalSetup: require.resolve('./global-setup'),
+  /* Maximum time entire test run can go for. */
+  globalTimeout: 60 * 60 * 1000,
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   reporter: [
     ['list'],
     ['html', {open: 'always',}]
@@ -31,7 +33,7 @@ const config = {
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5000
+    timeout: 10 * 1000
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -48,14 +50,15 @@ const config = {
   use: {
     baseURL: 'https://www.saucedemo.com',
     storageState: 'storageState.json',
-    /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-    actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://localhost:3000',
     viewport: { width: 1920, height: 937 },
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure'
+    screenshot: 'only-on-failure',
+    /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
+    actionTimeout: 10 * 1000,
+    navigationTimeout: 30 * 1000
   },
 
   /* Configure projects for major browsers */

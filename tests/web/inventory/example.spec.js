@@ -31,7 +31,7 @@ test.describe('@Smoke-suite > Inventory', () => {
     //await context.tracing.start({ screenshots: true, snapshots: true });
     await page.goto('/inventory.html');
     //await expect(page.locator('[alt="Sauce Labs Backpack"]')).toHaveScreenshot('inventoryBackpack.png', {  });
-    await expect(page).toHaveScreenshot();
+    await expect(page).toHaveScreenshot('inventoryPage.png');
     //await context.tracing.stop({ path: 'trace.zip' });
   })
 });
