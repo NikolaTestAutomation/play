@@ -26,12 +26,15 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
       - name: Setup Pages
+        if: success() || needs.test.result == 'failure'
         uses: actions/configure-pages@v2
       - name: Upload artifact
+        if: success() || needs.test.result == 'failure'
         uses: actions/upload-pages-artifact@v1
         with:
           # Upload entire repository
           path: play/
       - name: Deploy to GitHub Pages
+        if: success() || needs.test.result == 'failure'
         id: deployment
         uses: actions/deploy-pages@v1
