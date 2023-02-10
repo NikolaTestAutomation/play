@@ -17,6 +17,10 @@ const config = {
   globalSetup: require.resolve('./global-setup'),
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
+  reporter: [
+    ['list'],
+    ['html', {open: 'always',}]
+  ],
   expect: {
     toHaveScreenshot: {
       threshold: 0.8,
@@ -38,7 +42,7 @@ const config = {
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  //reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   maxFailures: process.env.CI ? 10 : undefined,
   use: {
