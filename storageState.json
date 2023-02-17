@@ -5,7 +5,7 @@
       "value": "standard_user",
       "domain": "www.saucedemo.com",
       "path": "/",
-      "expires": 1676651853,
+      "expires": 1676653092,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
